@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  chatbot:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - COHERE_API_KEY=PDupltFxga8FYwjpE7t3UYZIBKRdpky4cpV8QpcF
+      # Puedes agregar aquí otras variables de entorno como configuración DB si quieres
+    restart: unless-stopped
