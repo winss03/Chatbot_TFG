@@ -297,16 +297,16 @@ def responder_pregunta(pregunta):
     return result['answer']
 
 # Función para recargar automáticamente el chatbot cada cierto tiempo
-def recarga_periodica_chatbot(intervalo_segundos=3600):
-    """Recarga el chatbot cada 'intervalo_segundos' segundos (por defecto, cada hora)."""
-    while True:
-        try:
-            logger.info("🔄 Recargando datos del chatbot automáticamente...")
-            inicializar_chatbot()
-            logger.info("✅ Chatbot recargado correctamente.")
-        except Exception as e:
-            logger.error(f"❌ Error al recargar el chatbot: {e}")
-        time.sleep(intervalo_segundos)
+# def recarga_periodica_chatbot(intervalo_segundos=3600):
+#     """Recarga el chatbot cada 'intervalo_segundos' segundos (por defecto, cada hora)."""
+#     while True:
+#         try:
+#             logger.info("🔄 Recargando datos del chatbot automáticamente...")
+#             inicializar_chatbot()
+#             logger.info("✅ Chatbot recargado correctamente.")
+#         except Exception as e:
+#             logger.error(f"❌ Error al recargar el chatbot: {e}")
+#         time.sleep(intervalo_segundos)
 
 # Iniciar el hilo de recarga automática solo si es el proceso principal
 if __name__ != "__main__":
