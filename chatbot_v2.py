@@ -309,11 +309,11 @@ def responder_pregunta(pregunta):
 #         time.sleep(intervalo_segundos)
 
 # Iniciar el hilo de recarga automática solo si es el proceso principal
-if __name__ != "__main__":
-    hilo_recarga = threading.Thread(target=recarga_periodica_chatbot, args=(3600,), daemon=True)
-    hilo_recarga.start()
+# if __name__ != "__main__":
+#     hilo_recarga = threading.Thread(target=recarga_periodica_chatbot, args=(3600,), daemon=True)
+#     hilo_recarga.start()
     
-        raise Exception("Chatbot no inicializado.")
+#         raise Exception("Chatbot no inicializado.")
     
-    result = chatbot_chain.invoke({"question": pregunta})
-    return result['answer']
+#     result = chatbot_chain.invoke({"question": pregunta})
+#     return result['answer']
