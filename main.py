@@ -51,23 +51,19 @@ def startup_event():
 def root():
     return {"mensaje": "¡Hola! Soy tu asistente de dispositivos GPS. ¿En qué puedo ayudarte hoy?"}
 
+#opcion anterior para FastAPI sin streaming
 
 @app.post("/preguntar")
 def preguntar(p: Pregunta):
     logger.info(f"Pregunta recibida: {p.pregunta}")
     try:
-        # Simulación de streaming: divide la respuesta en fragmentos
-        def respuesta_stream():
-            respuesta = responder_pregunta(p.pregunta)
-            # Aquí simulamos el streaming dividiendo la respuesta en frases
-            for frase in respuesta.split('. '):
-                yield frase.strip() + '.\n'
-                time.sleep(0.3)  # Simula retardo de streaming
-
-        return StreamingResponse(respuesta_stream(), media_type="text/plain")
+        respuesta = responder_pregunta(p.pregunta)
+        logger.info("Respuesta generada")
+        return {"respuesta": respuesta}
     except Exception as e:
         logger.error(f"Error al responder: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 if __name__ == "__main__":
     import uvicorn
@@ -79,16 +75,3 @@ if __name__ == "__main__":
         ssl_keyfile=None,  # Ngrok maneja HTTPS
         ssl_certfile=None
     )
-    
-#opcion anterior para FastAPI sin streaming
-
-# @app.post("/preguntar")
-# def preguntar(p: Pregunta):
-#     logger.info(f"Pregunta recibida: {p.pregunta}")
-#     try:
-#         respuesta = responder_pregunta(p.pregunta)
-#         logger.info("Respuesta generada")
-#         return {"respuesta": respuesta}
-#     except Exception as e:
-#         logger.error(f"Error al responder: {e}")
-#         raise HTTPException(status_code=500, detail=str(e))
