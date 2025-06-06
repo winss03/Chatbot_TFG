@@ -3,6 +3,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, validator
 from chatbot_v2 import inicializar_chatbot, responder_pregunta
+from fastapi.responses import StreamingResponse
+import time
 
 # Configura el logging
 logging.basicConfig(level=logging.INFO)
@@ -11,7 +13,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI(
     title="Chatbot GPS API",
     description="API para consultar información de dispositivos GPS",
-    version="1.0.0"
+    version="2.4.0"
 )
 
 # Configuración de CORS actualizada para ngrok
@@ -46,17 +48,23 @@ def startup_event():
     logger.info("Chatbot inicializado correctamente")
 
 @app.get("/")
-def leer_root():
-    return {"mensaje": "El chatbot está activo. Ve a /docs para probarlo."}
+def root():
+    return {"mensaje": "¡Hola! Soy tu asistente de dispositivos GPS. ¿En qué puedo ayudarte hoy?"}
 
 
 @app.post("/preguntar")
 def preguntar(p: Pregunta):
     logger.info(f"Pregunta recibida: {p.pregunta}")
     try:
-        respuesta = responder_pregunta(p.pregunta)
-        logger.info("Respuesta generada")
-        return {"respuesta": respuesta}
+        # Simulación de streaming: divide la respuesta en fragmentos
+        def respuesta_stream():
+            respuesta = responder_pregunta(p.pregunta)
+            # Aquí simulamos el streaming dividiendo la respuesta en frases
+            for frase in respuesta.split('. '):
+                yield frase.strip() + '.\n'
+                time.sleep(0.3)  # Simula retardo de streaming
+
+        return StreamingResponse(respuesta_stream(), media_type="text/plain")
     except Exception as e:
         logger.error(f"Error al responder: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -71,3 +79,16 @@ if __name__ == "__main__":
         ssl_keyfile=None,  # Ngrok maneja HTTPS
         ssl_certfile=None
     )
+    
+#opcion anterior para FastAPI sin streaming
+
+# @app.post("/preguntar")
+# def preguntar(p: Pregunta):
+#     logger.info(f"Pregunta recibida: {p.pregunta}")
+#     try:
+#         respuesta = responder_pregunta(p.pregunta)
+#         logger.info("Respuesta generada")
+#         return {"respuesta": respuesta}
+#     except Exception as e:
+#         logger.error(f"Error al responder: {e}")
+#         raise HTTPException(status_code=500, detail=str(e))
